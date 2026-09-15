@@ -1,0 +1,38 @@
+/* ==========================================
+   主题配色配置文件 (theme.css)
+   ========================================== */
+:root {
+    /* --- 日间模式 (Light Mode) 变量 --- */
+    --app-bg: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+    --card-background: rgba(255, 255, 255, 0.75);
+    --card-border-color: rgba(226, 232, 240, 0.9);
+    --search-bg: rgba(255, 255, 255, 0.9);
+    
+    /* 渐变与主题色 */
+    --brand-gradient: linear-gradient(135deg, #0284c7, #4f46e5);
+    --button-theme-bg: linear-gradient(135deg, #f59e0b, #d97706);
+    --glow-shadow: rgba(245, 158, 11, 0.25);
+    --stat-num-color: #4f46e5;
+    --clock-bg: #e2e8f0;
+}
+
+:root.dark {
+    /* --- 夜间模式 (Dark Mode) 变量 --- */
+    --app-bg: radial-gradient(circle at 50% 50%, #0f172a 0%, #05070f 100%);
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #64748b;
+    --card-background: rgba(19, 27, 46, 0.65);
+    --card-border-color: rgba(255, 255, 255, 0.08);
+    --search-bg: rgba(19, 27, 46, 0.6);
+    
+    /* 渐变与主题色 */
+    --brand-gradient: linear-gradient(135deg, #22d3ee, #6366f1);
+    --button-theme-bg: linear-gradient(135deg, #6366f1, #a855f7);
+    --glow-shadow: rgba(99, 102, 241, 0.35);
+    --stat-num-color: #38bdf8;
+    --clock-bg: rgba(0, 0, 0, 0.4);
+}

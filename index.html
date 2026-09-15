@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LiQing の 宝藏之地</title>
+    
+    <!-- 1. 主题变量配置表 -->
+    <link rel="stylesheet" href="theme.css">
+    <!-- 2. 主版面样式表 -->
+    <link rel="stylesheet" href="style.css">
+    <!-- 3. 优先执行的主题状态切换脚本 -->
+    <script src="theme.js"></script>
+</head>
+<body>
+
+    <!-- 粒子装饰区：加入了 Canvas 画布 -->
+    <div class="bg-decorations">
+        <canvas id="bg-canvas"></canvas>
+        <div class="side-text-left">Tailwind CSS 拯救前端</div>
+        <div class="side-text-right">前方高能反应！</div>
+    </div>
+
+<!-- 顶栏导航 (Logo 已修复重影，首页 nav-link 设有 active) -->
+    <header class="app-header">
+        <div class="logo">
+            <span class="logo-white">LiQing</span><span class="logo-colored"> の </span><span class="logo-white">宝藏之地</span>
+        </div>
+        <nav class="nav-links">
+            <a href="index.html" class="nav-link active">首页</a>
+            <a href="#" class="nav-link">项目</a>
+            <a href="#" class="nav-link">归档</a>
+            <a href="gallery.html" class="nav-link">照片墙</a>
+            <a href="#" class="nav-link">音乐</a>
+            <a href="#" class="nav-link">灵境</a>
+            <a href="#" class="nav-link">说说</a>
+            <a href="#" class="nav-link">杂谈</a>
+            <a href="#" class="nav-link">友链</a>
+            <a href="about.html" class="nav-link">关于</a>
+        </nav>
+    </header>
+
+    <!-- 搜索栏区 -->
+    <div class="search-bar-container">
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="搜寻标题、描述或标签..." class="search-input">
+        </div>
+    </div>
+
+<!-- 主体网格区 -->
+    <main class="main-content">
+
+        <!-- 🌟 补上了这个至关重要的并排容器开头 -->
+        <div class="grid-row-top">
+
+            <!-- 个人名片 (已新增跳转链接与交互层) -->
+            <section class="card profile-card">
+                
+                <!-- 核心：覆盖卡片中上部 80% 区域的绝对定位跳转链接（不遮挡底部社交按钮） -->
+                <a href="about.html" class="profile-click-overlay" title="点击查看个人简介"></a>
+                
+                <div class="profile-header">
+                    <img class="avatar-box" src="./img/头像.jpg" alt="头像">
+                    <div class="profile-info">
+                        <h2 class="profile-name">LiQing</h2>
+                        <p class="profile-bio">在代码间穿梭的普通大学生。</p>
+                    </div>
+                </div>
+                <div class="profile-footer">
+                    <div class="stats">
+                        <div class="stat-item">
+                            <span class="stat-num stat-posts">0</span>
+                            <span class="stat-label">文章</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-num stat-notes">0</span>
+                            <span class="stat-label">杂谈</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-num stat-photos">29</span>
+                            <span class="stat-label">照片</span>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" class="social-btn"><img src="./img/github logo.png" alt=""></a>
+                        <a href="#" class="social-btn"><img src="./img/谷歌 logo.png" alt=""></a>
+                        <a href="#" class="social-btn">🖂</a>
+                        <a href="#" class="social-btn">⚙</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 音乐播放器 -->
+            <section class="card music-card">
+                <img class="vinyl-record-container" src="./img/夏实.jpg" alt="音乐播放器">
+                <div class="player-details">
+                    <div class="player-header">
+                        <span class="player-badge">CLOUD MUSIC</span>
+                        <h3 class="track-title">夏实</h3>
+                        <p class="track-artist">歌手:AKASAKI</p>
+                        <p class="track-lyricist">来源:AKASAKI</p>
+                    </div>
+                    <div class="progress-area">
+                        <div class="time-stamps">
+                            <span>00:00</span>
+                            <span>05:07</span>
+                        </div>
+                        <div class="progress-bar">
+                            <!-- 音乐播放进度条】 -->
+                            <div class="progress-current" style="width: 35%;">
+                                <div class="progress-handle"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="player-controls">
+                        <button class="ctrl-btn">⏮</button>
+                        <button class="ctrl-btn play-btn">⏸</button>
+                        <button class="ctrl-btn">⏭</button>
+                    </div>
+                </div>
+            </section>
+
+        </div> <!-- 🌟 这里的 </div> 现在完美闭合了上面的 grid-row-top 容器 -->
+
+<!-- 跑马灯字幕栏 (已优化为动态无限羽化滚动) -->
+        <div class="card lyrics-marquee">
+            <!-- 左侧：微自旋的小乐符 -->
+            <div class="marquee-icon-left">🎵</div>
+            
+            <!-- 中间：两端边缘羽化的滚动视口 -->
+            <div class="marquee-viewport">
+                <!-- ↙↙↙ 【在此处任意修改您的跑马灯滚动内容】 -->
+                <div class="marquee-track">
+                    <span>【当前播放：夏実 (Kajitsu) - AKASAKI】 ~ “酸っぱい果実に誘われたの ほら、
+                        君の目がもう揺らいでる (被酸涩果实诱惑的你我，看吧，你的双眼已经开始动摇)” ~ 
+                        “あの八月に奪われたの 君と僕の想いで (在那八月里被夺去的，是你和我的记忆)” ~ 
+                        “やるせないこの気持ちと 夏に置いてかれた僕 (无处可去的这种感受，与被夏天遗留的我)” ~ 
+                        “凛とし美しく切ない君の身体はさ どこか果实の匂いがしたの 
+                        (凛然美丽而又带着一丝哀伤的你的身体，散发着某种果实香气)” ~
+                    </span>
+                </div>
+            </div>
+            
+            <!-- 右侧：活泼跃动的跳舞音符 -->
+            <div class="marquee-icon-right">♪</div>
+        </div>
+
+        <!-- 第二排：混合布局区 -->
+        <div class="grid-row-bottom">
+<!-- 左侧：主要文章特色卡（改造为 5 图轮播） -->
+<!-- ========================================================== -->
+            <!-- 【特色文章轮播图】HTML 模板                                 -->
+            <!-- 提示：您可以根据注释指引，修改图片路径和文字内容                -->
+            <!-- ========================================================== -->
+            <section class="card feature-card" id="feature-carousel">
+                <!-- 轮播幻灯片轨道 -->
+                <div class="carousel-track">
+
+                    <!-- ----------------------------------------- -->
+                    <!-- 【幻灯片 1】 -->
+                    <!-- ----------------------------------------- -->
+                    <div class="carousel-slide active">
+                        <!-- ↙↙↙ 【在此处的 url('...') 内替换为您自己的第一张图片路径】 -->
+                        <div class="feature-bg" style="background-image: url('./img/波奇酱.jpg');"></div>
+                        <div class="feature-content">
+                            <div class="feature-meta">
+                                <span class="feature-badge">LATEST INSIGHT</span>
+                                <!-- ↙↙↙ 【在此处修改幻灯片 1 的日期】 -->
+                                <span class="feature-date">2026.05.12 16:25</span>
+                            </div>
+                            <!-- ↙↙↙ 【在此处修改幻灯片 1 的主标题】 -->
+                            <h4 class="feature-title">波奇酱</h4>
+                            <!-- ↙↙↙ 【在此处修改幻灯片 1 的描述/副标题】 -->
+                            <p class="feature-desc">孤独摇滚</p>
+                        </div>
+                    </div>
+
+                    <!-- ----------------------------------------- -->
+                    <!-- 【幻灯片 2】 -->
+                    <!-- ----------------------------------------- -->
+                    <div class="carousel-slide">
+                        <!-- ↙↙↙ 【在此处的 url('...') 内替换为您自己的第二张图片路径】 -->
+                        <div class="feature-bg" style="background-image: url('./img/熏子.png');"></div>
+                        <div class="feature-content">
+                            <div class="feature-meta">
+                                <span class="feature-badge">LATEST INSIGHT</span>
+                                <!-- ↙↙↙ 【在此处修改幻灯片 2 的日期】 -->
+                                <span class="feature-date">2026.05.12 15:00</span>
+                            </div>
+                            <!-- ↙↙↙ 【在此处修改幻灯片 2 的主标题】 -->
+                            <h4 class="feature-title">熏子</h4>
+                            <!-- ↙↙↙ 【在此处修改幻灯片 2 的描述/副标题】 -->
+                            <p class="feature-desc">熏香花凛然绽放</p>
+                        </div>
+                    </div>
+
+                    <!-- ----------------------------------------- -->
+                    <!-- 【幻灯片 3】 -->
+                    <!-- ----------------------------------------- -->
+                    <div class="carousel-slide">
+                        <!-- ↙↙↙ 【在此处的 url('...') 内替换为您自己的第三张图片路径】 -->
+                        <div class="feature-bg" style="background-image: url('./img/桃夭.png');"></div>
+                        <div class="feature-content">
+                            <div class="feature-meta">
+                                <span class="feature-badge">LATEST INSIGHT</span>
+                                <!-- ↙↙↙ 【在此处修改幻灯片 3 的日期】 -->
+                                <span class="feature-date">2026.05.10 15:06</span>
+                            </div>
+                            <!-- ↙↙↙ 【在此处修改幻灯片 3 的主标题】 -->
+                            <h4 class="feature-title">桃夭</h4>
+                            <!-- ↙↙↙ 【在此处修改幻灯片 3 的描述/副标题】 -->
+                            <p class="feature-desc">百妖谱</p>
+                        </div>
+                    </div>
+
+                    <!-- ----------------------------------------- -->
+                    <!-- 【幻灯片 4】 -->
+                    <!-- ----------------------------------------- -->
+                    <div class="carousel-slide">
+                        <!-- ↙↙↙ 【在此处的 url('...') 内替换为您自己的第四张图片路径】 -->
+                        <div class="feature-bg" style="background-image: url('./img/绘梨衣.jpg');"></div>
+                        <div class="feature-content">
+                            <div class="feature-meta">
+                                <span class="feature-badge">LATEST INSIGHT</span>
+                                <!-- ↙↙↙ 【在此处修改幻灯片 4 的日期】 -->
+                                <span class="feature-date">2026.05.10 14:46</span>
+                            </div>
+                            <!-- ↙↙↙ 【在此处修改幻灯片 4 的主标题】 -->
+                            <h4 class="feature-title">上杉绘梨衣</h4>
+                            <!-- ↙↙↙ 【在此处修改幻灯片 4 的描述/副标题】 -->
+                            <p class="feature-desc">龙族</p>
+                        </div>
+                    </div>
+
+                    <!-- ----------------------------------------- -->
+                    <!-- 【幻灯片 5】 -->
+                    <!-- ----------------------------------------- -->
+                    <div class="carousel-slide">
+                        <!-- ↙↙↙ 【在此处的 url('...') 内替换为您自己的第五张图片路径】 -->
+                        <div class="feature-bg" style="background-image: url('./img/辉夜姬.jpeg');"></div>
+                        <div class="feature-content">
+                            <div class="feature-meta">
+                                <span class="feature-badge">LATEST INSIGHT</span>
+                                <!-- ↙↙↙ 【在此处修改幻灯片 5 的日期】 -->
+                                <span class="feature-date">2026.05.09 14:48</span>
+                            </div>
+                            <!-- ↙↙↙ 【在此处修改幻灯片 5 的主标题】 -->
+                            <h4 class="feature-title">辉夜姬</h4>
+                            <!-- ↙↙↙ 【在此处修改幻灯片 5 的描述/副标题】 -->
+                            <p class="feature-desc">超时空辉夜姬</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 下方圆点指示器 -->
+                <div class="carousel-dots">
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+            </section>
+
+            <!-- 右侧：子级组合区 -->
+            <div class="sub-column-right">
+                <!-- 上：宽幅摄影卡（已重构结构，使其动画与左侧轮播图一致） -->
+                <a href="gallery.html" class="card photography-card">
+                    <!-- 1. 独立的背景图层，用于实现平滑的内部缩放 -->
+                    <div class="photography-bg" style="background-image: url('./img/02.png');"></div>
+                    
+                    <!-- 2. 暗色渐变遮罩 -->
+                    <div class="card-overlay"></div>
+                    
+                    <!-- 3. 独立的文字内容层，用于实现轻微缩放和上移 -->
+                    <div class="photo-info">
+                        <h4 class="photo-title">番剧</h4>
+                        <p class="photo-desc">随便拍拍</p>
+                    </div>
+                </a>
+
+                <!-- 下：双列小卡 -->
+                <div class="split-row">
+                    <!-- 记录卡 (已升级为 5 图轮播，效果与左侧轮播图一致) -->
+                    <section class="card records-card" id="records-carousel">
+                        <!-- 轮播幻灯片轨道 -->
+                        <div class="carousel-track">
+
+                            <!-- ----------------------------------------- -->
+                            <!-- 【幻灯片 1】 (对应 input_file_18) -->
+                            <!-- ----------------------------------------- -->
+                            <div class="carousel-slide active">
+                                <!-- ↙↙↙ 【在此处 url('...') 中修改幻灯片 1 的背景图片路径】 -->
+                                <div class="feature-bg" style="background-image: url('./img/八重神子.jpg');"></div>
+                                <div class="feature-content">
+                                    <div class="record-header">
+                                        <span class="record-badge">RECORDS</span>
+                                        <!-- ↙↙↙ 【在此处修改日期】 -->
+                                        <span class="record-date">2026.06.03 15:27</span>
+                                    </div>
+                                    <!-- ↙↙↙ 【在此处修改标题】 -->
+                                    <h5 class="record-title">个人博客的搭建</h5>
+                                    <!-- ↙↙↙ 【在此处修改描述】 -->
+                                    <p class="record-desc">搭建了一个个人博客，记录了开发过程中的各种问题和解决方案</p>
+                                </div>
+                            </div>
+
+                            <!-- ----------------------------------------- -->
+                            <!-- 【幻灯片 2】 (对应 input_file_17) -->
+                            <!-- ----------------------------------------- -->
+                            <div class="carousel-slide">
+                                <!-- ↙↙↙ 【在此处 url('...') 中修改幻灯片 2 的背景图片路径】 -->
+                                <div class="feature-bg" style="background-image: url('./img/国风申鹤.jpg');"></div>
+                                <div class="feature-content">
+                                    <div class="record-header">
+                                        <span class="record-badge">RECORDS</span>
+                                        <span class="record-date">2026.04.24 16:31</span>
+                                    </div>
+                                    <h5 class="record-title">搭建音乐板块</h5>
+                                    <p class="record-desc">本来想做音乐模块的，但好像用css和JavaScript实现不了，就留在后面再说吧</p>
+                                </div>
+                            </div>
+
+                            <!-- ----------------------------------------- -->
+                            <!-- 【幻灯片 3】 (对应 input_file_20) -->
+                            <!-- ----------------------------------------- -->
+                            <div class="carousel-slide">
+                                <!-- ↙↙↙ 【在此处 url('...') 中修改幻灯片 3 的背景图片路径】 -->
+                                <div class="feature-bg" style="background-image: url('./img/绫华.png');"></div>
+                                <div class="feature-content">
+                                    <div class="record-header">
+                                        <span class="record-badge">RECORDS</span>
+                                        <span class="record-date">2026.04.24 10:42</span>
+                                    </div>
+                                    <h5 class="record-title">弹幕效果</h5>
+                                    <p class="record-desc">实现了弹幕效果，可以为背景添加动态评论</p>
+                                </div>
+                            </div>
+
+                            <!-- ----------------------------------------- -->
+                            <!-- 【幻灯片 4】 (对应 input_file_19) -->
+                            <!-- ----------------------------------------- -->
+                            <div class="carousel-slide">
+                                <!-- ↙↙↙ 【在此处 url('...') 中修改幻灯片 4 的背景图片路径】 -->
+                                <div class="feature-bg" style="background-image: url('./img/长离.jpg');"></div>
+                                <div class="feature-content">
+                                    <div class="record-header">
+                                        <span class="record-badge">RECORDS</span>
+                                        <span class="record-date">2026.04.15 16:12</span>
+                                    </div>
+                                    <h5 class="record-title">缺少的页面</h5>
+                                    <p class="record-desc">现在还缺少一些页面，比如项目、归档、说说等，需要进一步完善，留在以后慢慢做吧...</p>
+                                </div>
+                            </div>
+
+                            <!-- ----------------------------------------- -->
+                            <!-- 【幻灯片 5】 (对应 input_file_16) -->
+                            <!-- ----------------------------------------- -->
+                            <div class="carousel-slide">
+                                <!-- ↙↙↙ 【在此处 url('...') 中修改幻灯片 5 的背景图片路径】 -->
+                                <div class="feature-bg" style="background-image: url('./img/刻晴.jpg');"></div>
+                                <div class="feature-content">
+                                    <div class="record-header">
+                                        <span class="record-badge">RECORDS</span>
+                                        <span class="record-date">2026.04.15 11:25</span>
+                                    </div>
+                                    <h5 class="record-title">差不多完成了</h5>
+                                    <p class="record-desc">现在基本上完成了，剩下的就是一些小细节和优化了</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- 下方圆点指示器 (自动渲染至右下角) -->
+                        <div class="carousel-dots">
+                            <span class="dot active"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
+                    </section>
+
+                    <!-- 主题切换按钮卡 -->
+                    <button id="theme-toggle-btn" class="card theme-toggle-card">
+                        <div class="theme-icon-box">
+                            <span id="theme-icon">☀️</span>
+                        </div>
+                        <h5 id="theme-title" class="theme-label-title">日间模式</h5>
+                        <p id="theme-desc" class="theme-label-desc">清晨明媚的阳光</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚状态与技术栈 -->
+        <footer class="app-footer">
+            <div class="footer-status">
+                <span id="live-clock" class="digital-clock">12:19:37</span>
+                <span class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>系统已稳定运行: <strong class="highlight-text">86天 12小时（打算做个可以计时的插件...）</strong></span>
+                </span>
+            </div>
+            <div class="footer-tags">
+                <span class="tech-tag"><span class="icon-hex">⬡</span> HTML 5</span>
+                <span class="tech-tag"><span class="icon-react">⚛</span> css</span>
+                <span class="tech-tag"><span class="icon-wind">⚡</span> JavaScript</span>
+            </div>
+            <div class="footer-filing">以严肃备案∠(°ゝ°)</div>
+        </footer>
+
+    </main>
+
+    <!-- 浮动挂件区 -->
+    <div class="floating-container">
+        <div class="floating-controls">
+            <button class="float-btn" id="danmaku-trigger-btn">💬</button>
+            <button class="float-btn">📹</button>
+        </div>
+    </div>
+
+    <!-- 侧边菜单控制 -->
+    <div class="settings-widget">
+        <button class="settings-btn">⠿</button>
+    </div>
+
+    <!-- 引入时间对齐背景轮播与弹幕引擎 -->
+    <script src="shared-bg.js"></script>
+
+    <!-- 4. 主页面交互及逻辑控制脚本 -->
+    <script src="main.js"></script>
+</body>
+</html>

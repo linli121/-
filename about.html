@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我 - LiQing の 宝藏之地</title>
+    
+    <!-- 复用原有全局主题与版面样式表 -->
+    <link rel="stylesheet" href="theme.css">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- 外联载入关于我专属样式表 -->
+    <link rel="stylesheet" href="about.css">
+    
+    <!-- 优先执行的主题状态切换脚本 -->
+    <script src="theme.js"></script>
+</head>
+<body>
+
+    <!-- 全局时间同步背景轮播与慢速弹幕 -->
+    <div class="bg-decorations">
+        <canvas id="bg-canvas"></canvas>
+    </div>
+
+    <!-- 顶栏导航 -->
+    <header class="app-header">
+        <div class="logo">LiQing の 宝藏之地</div>
+        <nav class="nav-links">
+            <a href="index.html" class="nav-link">首页</a>
+            <a href="#" class="nav-link">项目</a>
+            <a href="#" class="nav-link">归档</a>
+            <a href="gallery.html" class="nav-link">照片墙</a>
+            <a href="#" class="nav-link">音乐</a>
+            <a href="#" class="nav-link">灵境</a>
+            <a href="#" class="nav-link">说说</a>
+            <a href="#" class="nav-link">杂谈</a>
+            <a href="#" class="nav-link">友链</a>
+            <a href="about.html" class="nav-link active">关于</a>
+        </nav>
+    </header>
+
+    <!-- 关于我主体内容大卡片 -->
+    <main class="about-card card">
+        
+        <!-- 1. 顶部横幅图 -->
+        <div class="about-banner" style="background-image: url('./img/雷电将军.jpg');"></div>
+        
+        <!-- 2. 半重叠头像 -->
+        <div class="about-avatar-container">
+            <div class="about-avatar" style="background-image: url('./img/头像.jpg');"></div>
+        </div>
+
+        <div class="about-content">
+            <!-- 3. 卡片头部信息 (已经删除右侧的选项卡切换按钮) -->
+            <div class="about-header-row">
+                <div class="about-title-block">
+                    <h1>关于我</h1>
+                    <span class="about-subtitle">HELLO WORLD, I'M LIQING</span>
+                </div>
+            </div>
+
+            <!-- 4. 自我介绍富文本正文 -->
+            <article class="about-article">
+                <p><strong>个人简介</strong></p>
+                <p>你好，我是 LiQing。</p>
+                <p>一名<strong>人工智能</strong>专业的大一生，<strong>热爱编程与人工智能领域</strong>。</p>
+
+                <h3>📚 学习与研究方向</h3>
+                <ul>
+                    <li><strong>机器学习：</strong>包括深度学习、自然语言处理等。</li>
+                    <li><strong>计算机视觉：</strong>图像识别、目标检测等。</li>
+                    <li><strong>自然语言处理：</strong>文本生成、情感分析等。</li>
+                </ul>
+
+                <h3>💻 软件工程能力</h3>
+                <ul>
+                    <li><strong>后端开发：</strong>使用 Spring Boot 框架构建服务端架构，能够处理复杂的数据逻辑与计算任务调度。</li>
+                    <li><strong>前端开发：</strong>熟练掌握 Vue.js 与 React 框架，为复杂科学数据的可视化与交互提供流畅的体验。</li>
+                </ul>
+
+                <p>欢迎各位朋友联系交流~</p>
+            </article>
+
+            <!-- 5. 评论发表区 -->
+            <section class="comments-section">
+                <div class="comments-header">
+                    <span class="comments-count-tab">0 条评论</span>
+                    <span class="user-status-dropdown">未登录用户 ∨</span>
+                </div>
+
+                <div class="comment-form-wrapper">
+                    <!-- 左侧 GitHub 头像标 -->
+                    <div class="comment-github-avatar">🗲</div>
+                    
+                    <!-- 右侧发布框 -->
+                    <div class="comment-input-area">
+                        <textarea class="comment-textarea" placeholder="说点什么..."></textarea>
+                        
+                        <!-- 底部控制条 -->
+                        <div class="comment-actions-bar">
+                            <span class="markdown-tips">ⓘ 支持 Markdown 语法</span>
+                            <div class="action-buttons">
+                                <button class="btn-login-github">使用 GitHub 登录</button>
+                                <button class="btn-preview">预览</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 复用全局 Canvas 流萤粒子、背景同步轮播与慢速弹幕 -->
+    <script src="shared-bg.js"></script>
+    <script src="main.js"></script>
+
+        <!-- 浮动小猫及挂件区 -->
+    <div class="floating-container">
+        <div class="floating-controls">
+            <button class="float-btn" id="danmaku-trigger-btn">💬</button>
+            <button class="float-btn">📹</button>
+        </div>
+    </div>
+
+</body>
+</html>

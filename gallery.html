@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>光影画廊 - LiQing の 宝藏之地</title>
+    
+    <!-- 复用原有全局主题与版面样式表 -->
+    <link rel="stylesheet" href="theme.css">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- ↙↙↙ 在此处外联载入画廊专属样式表 -->
+    <link rel="stylesheet" href="gallery.css">
+    
+    <!-- 优先执行的主题状态切换脚本 -->
+    <script src="theme.js"></script>
+</head>
+<body>
+
+    <!-- 粒子及流萤背景装饰 -->
+    <div class="bg-decorations">
+        <canvas id="bg-canvas"></canvas>
+    </div>
+
+    <!-- 顶栏导航 (照片墙设为激活) -->
+    <header class="app-header">
+        <div class="logo">LiQing の 宝藏之地</div>
+        <nav class="nav-links">
+            <a href="index.html" class="nav-link">首页</a>
+            <a href="#" class="nav-link">项目</a>
+            <a href="#" class="nav-link">归档</a>
+            <a href="gallery.html" class="nav-link active">照片墙</a>
+            <a href="#" class="nav-link">音乐</a>
+            <a href="#" class="nav-link">灵境</a>
+            <a href="#" class="nav-link">说说</a>
+            <a href="#" class="nav-link">杂谈</a>
+            <a href="#" class="nav-link">友链</a>
+            <a href="about.html" class="nav-link">关于</a>
+        </nav>
+    </header>
+
+    <!-- 主画廊视图 (图 1) -->
+    <div class="gallery-container" id="gallery-home-view">
+        <div class="gallery-title-section">
+            <h1 class="gallery-main-title">光影画廊</h1>
+            <p class="gallery-subtitle">定格时间，二次元与现实的每一次心跳</p>
+        </div>
+
+        <div class="gallery-search">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" placeholder="搜索相册名或照片描述..." class="search-input">
+            </div>
+        </div>
+
+        <!-- 画廊相册堆叠卡片网格 -->
+        <div class="gallery-grid" id="gallery-grid-dom">
+            <!-- 堆叠卡片将由底部的 JS 脚本全自动动态渲染生成 -->
+        </div>
+    </div>
+
+    <!-- 详情视图 (图 2) -->
+    <div class="gallery-container album-detail-view" id="gallery-detail-view">
+        <div class="detail-header">
+            <div>
+                <button class="back-btn" onclick="showGalleryHome()">
+                    ← 返回画廊
+                </button>
+                <div class="detail-title-block">
+                    <h1 class="detail-main-title" id="detail-title">相册标题</h1>
+                    <p class="detail-desc" id="detail-desc">相册详细描述说明...</p>
+                </div>
+            </div>
+            <div class="detail-count-badge" id="detail-count">
+                共 3 瞬间
+            </div>
+        </div>
+
+        <!-- 详情相片网格 -->
+        <div class="photos-masonry" id="detail-photos-dom">
+            <!-- 相片将由底部的 JS 脚本全自动动态渲染生成 -->
+        </div>
+    </div>
+
+    <!-- 浮动小猫及挂件区 -->
+    <div class="floating-container">
+        <div class="floating-controls">
+            <button class="float-btn" id="danmaku-trigger-btn">💬</button>
+            <button class="float-btn">📹</button>
+        </div>
+    </div>
+
+    <!-- 复用全局 Canvas 流萤粒子系统与画廊切换脚本 -->
+    <script src="main.js"></script>
+    <script>
+        // =========================================================================
+        // 【相册数据源管理中心】
+        // ↙↙↙ 新增了 "aspect" 属性用于区分横屏 (landscape) 还是竖屏 (portrait) 相册
+        // =========================================================================
+        const albumsData = [
+            {
+                id: "nanchang-51",
+                title: "番",
+                date: "2026-05-07",
+                desc: "随便存的相册（测试用相册）",
+                aspect: "landscape", // ↙↙↙ 横屏相册
+                photos: [
+                    { src:"./img/熏子.png",caption: "熏子" }, 
+                    { src:"./img/绘梨衣.jpg", caption: "绘梨衣" },
+                    { src:"./img/波奇酱.jpg", caption: "波奇" }
+                ]
+            },
+            {
+                id: "chestnut-cat",
+                title: "三崩子",
+                date: "2026-04-21",
+                desc: "😋",
+                aspect: "portrait", // ↙↙↙ 竖屏相册
+                photos: [
+                    { src: "./img/阿波尼亚.jpg", caption: "阿波尼亚" },
+                    { src: "./img/爱莉希雅.png", caption: "爱莉希雅" },
+                    { src: "./img/爱莉希雅人之律者.png", caption: "爱莉希雅人之律者" }
+                ]
+            },
+            {
+                id: "terra-journey",
+                title: "泰拉大陆纪行",
+                date: "2026.01",
+                desc: "关于源石、孤星与前文明的视觉记录（测试用相册）",
+                aspect: "portrait", // ↙↙↙ 竖屏相册
+                photos: [
+                    { src: "./img/庄方宜.jpg", caption: "庄方宜" },
+                    { src: "./img/凯尔希.jpg", caption: "凯尔希" },
+                    { src: "./img/夕.jpg", caption: "夕" }
+                ]
+            },
+            {
+                id: "history-trip",
+                title: "绘画之旅",
+                date: "2025.10",
+                desc: "高中时期绘画作品（测试用相册）",
+                aspect: "landscape", // ↙↙↙ 横屏相册
+                photos: [
+                    { src: "./img/music.jpg", caption: "music" },
+                    { src: "./img/生气.jpg", caption: "生气" },
+                    { src: "./img/中野五月.jpg", caption: "中野五月" },
+                    { src: "./img/冬狮郎.jpg", caption: "冬狮郎" },
+                    { src: "./img/魔女.jpg", caption: "魔女" }
+                ]
+            }
+        ];
+
+        // 初始化画廊主页 (动态判定 aspect 样式类)
+        function renderGalleryHome() {
+            // 2. ↙↙↙ 新增：检测 URL 参数是否带了具体相册 ID，实现从首页跨页面无缝直达相册详情
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetAlbumId = urlParams.get('album');
+            if (targetAlbumId) {
+                openAlbumDetail(targetAlbumId);
+            }
+            const gridDom = document.getElementById('gallery-grid-dom');
+            gridDom.innerHTML = '';
+
+            albumsData.forEach(album => {
+                const coverImg = album.photos[0] ? album.photos[0].src : '';
+                const photoCount = album.photos.length;
+                
+                // 根据 aspect 动态增加 .aspect-landscape 或 .aspect-portrait 控制类
+                const aspectClass = album.aspect === 'portrait' ? 'aspect-portrait' : 'aspect-landscape';
+
+                const albumHtml = `
+                    <div class="album-deck-wrapper ${aspectClass}" onclick="openAlbumDetail('${album.id}')">
+                        <div class="cards-stack-container">
+                            <div class="photo-stack-card card-back" style="background-image: url('${coverImg}');"></div>
+                            <div class="photo-stack-card card-middle" style="background-image: url('${coverImg}');"></div>
+                            <div class="photo-stack-card card-front" style="background-image: url('${coverImg}');">
+                                <div class="front-hover-overlay">
+                                    <span class="hover-photos-count">${photoCount} 张照片</span>
+                                    <span class="hover-click-text">Click to Open</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="album-meta-text">
+                            <div class="album-title-line">
+                                <span class="album-title">${album.title}</span>
+                                <span class="album-date-badge">${album.date}</span>
+                            </div>
+                            <p class="album-desc">${album.desc}</p>
+                        </div>
+                    </div>
+                `;
+                gridDom.innerHTML += albumHtml;
+            });
+        }
+
+        // 切换展现相册内部详情
+        function openAlbumDetail(albumId) {
+            const album = albumsData.find(a => a.id === albumId);
+            if (!album) return;
+
+            document.getElementById('detail-title').textContent = album.title;
+            document.getElementById('detail-desc').textContent = album.desc;
+            document.getElementById('detail-count').textContent = `共 ${album.photos.length} 瞬间`;
+
+            const photosDom = document.getElementById('detail-photos-dom');
+            photosDom.innerHTML = '';
+
+            album.photos.forEach(photo => {
+                const photoHtml = `
+                    <div class="detail-photo-card">
+                        <div class="detail-photo-img" style="background-image: url('${photo.src}');"></div>
+                        <div class="detail-photo-caption">
+                            <span class="detail-photo-title">${photo.caption}</span>
+                        </div>
+                    </div>
+                `;
+                photosDom.innerHTML += photoHtml;
+            });
+
+            document.getElementById('gallery-home-view').style.display = 'none';
+            document.getElementById('gallery-detail-view').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 返回画廊主页
+        function showGalleryHome() {
+            document.getElementById('gallery-detail-view').style.display = 'none';
+            document.getElementById('gallery-home-view').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        renderGalleryHome();
+    </script>
+    <!-- 🌟 核心：确保在 main.js 的上方，引入了全局背景与弹幕引擎 -->
+    <script src="shared-bg.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

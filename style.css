@@ -1,0 +1,1404 @@
+/* ==========================================
+   版面与全局样式表 (style.css)
+   ========================================== */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* style.css 中的 body 部分 */
+body {
+    background: transparent !important; /* 🌟 核心：必须设为透明，否则会挡住身后的全局轮播图和弹幕！ */
+    color: var(--text-primary);
+    font-family: system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    padding-bottom: 3rem;
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* body {
+    background: var(--app-bg);
+    color: var(--text-primary);
+    font-family: system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    padding-bottom: 3rem;
+    transition: background-color 0.5s ease, color 0.5s ease;
+} */
+
+/* 装饰背景 */
+.bg-decorations {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+#bg-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.side-text-left {
+    position: absolute;
+    top: 10rem;
+    left: 3rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    opacity: 0.3;
+    writing-mode: vertical-rl;
+    letter-spacing: 0.2em;
+    display: none;
+}
+
+.side-text-right {
+    position: absolute;
+    top: 8rem;
+    right: 3rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    opacity: 0.15;
+    writing-mode: vertical-rl;
+    letter-spacing: 0.2em;
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .side-text-left, .side-text-right {
+        display: block;
+    }
+}
+
+/* 顶栏导航 */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 3rem;
+    border-bottom: 1px solid var(--card-border-color);
+    backdrop-filter: blur(8px);
+    position: relative;
+    z-index: 10;
+}
+.logo {
+    font-weight: bold;
+    font-size: 1.1rem;
+    background: var(--brand-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+}
+.nav-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: color 0.2s;
+}
+.nav-link.active, .nav-link:hover {
+    color: var(--text-primary);
+}
+
+/* 搜索栏 */
+.search-bar-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    position: relative;
+    z-index: 10;
+}
+.search-box {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+}
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.search-input {
+    width: 100%;
+    background: var(--search-bg);
+    border: 1px solid var(--card-border-color);
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border-radius: 50px;
+    color: var(--text-primary);
+    outline: none;
+    font-size: 0.875rem;
+    transition: all 0.3s;
+}
+
+/* 主网格排版 */
+.main-content {
+    max-width: 1140px;
+    margin: 2rem auto 0;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: relative;
+    z-index: 10;
+}
+
+/* 通用卡片容器 */
+.card {
+    background: var(--card-background);
+    border: 1px solid var(--card-border-color);
+    border-radius: 1.25rem;
+    backdrop-filter: blur(12px);
+    transition: all 0.5s ease;
+}
+
+/* 布局行 */
+.grid-row-top {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: 1.5rem;
+}
+
+/* 个人名片样式 */
+.profile-card {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* ==========================================================
+   个人名片鼠标互动与跳转优化 (style.css)
+   ========================================================== */
+
+/* 名片卡片基础容器 */
+.profile-card {
+    position: relative;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* 鼠标悬停在卡片上时：卡片轻微浮起并散发柔光 */
+.profile-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px -5px var(--glow-shadow);
+}
+
+/* 绝对定位覆盖层：高度避开了底部的社交链接行，确保双功能完美并存 */
+.profile-click-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 60px); /* 留出底部 footer 按钮的可点空间 */
+    z-index: 5;
+    cursor: pointer;
+}
+
+/* 头像外框过渡参数 */
+.profile-card .avatar-box {
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* 🌟 【交互动效 1】：悬浮时头像微微逆时针倾斜 8 度并放大 */
+.profile-card:hover .avatar-box {
+    transform: rotate(-8deg) scale(1.05);
+}
+
+/* 文本信息容器过渡参数 */
+.profile-card .profile-info {
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    transform-origin: left center; /* 保持由左侧向右平滑放大 */
+}
+
+/* 🌟 【交互动效 2】：悬浮时文字区域平滑整体放大 2.5% */
+.profile-card:hover .profile-info {
+    transform: scale(1.025);
+}
+
+/* 底部社交链（确保层级高于跳转覆盖层，使其始终可以被点击） */
+.profile-card .profile-footer {
+    position: relative;
+    z-index: 10;
+}
+
+.profile-header {
+    display: flex;
+    gap: 1.5rem;
+}
+.avatar-box {
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    border: 1px solid var(--card-border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--card-background);
+    object-fit: cover;
+}
+.profile-name {
+    font-size: 1.5rem;
+}
+.profile-bio {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+    line-height: 1.6;
+}
+.profile-footer {
+    border-top: 1px solid var(--card-border-color);
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.stats {
+    display: flex;
+    gap: 1.5rem;
+}
+.stat-item {
+    text-align: center;
+}
+.stat-num {
+    display: block;
+    font-size: 1.15rem;
+    font-weight: bold;
+    color: var(--stat-num-color);
+}
+.stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+.social-links {
+    display: flex;
+    gap: 0.5rem;
+}
+.social-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--card-border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+/* 音乐卡样式 */
+.music-card {
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+.vinyl-record-container {
+    flex-shrink: 0;
+    width: 96px;
+    height: 96px;
+    animation: rotate 15s linear infinite;
+    border-radius: 50%; /* 强行将正方形的专辑封面裁剪为完美的圆盘，旋转时才好看 */
+    object-fit: cover;  /* 防拉伸 */
+}
+.player-details {
+    flex-grow: 1;
+}
+.player-badge {
+    font-size: 10px;
+    background: rgba(79, 70, 229, 0.1);
+    border: 1px solid rgba(79, 70, 229, 0.2);
+    padding: 2px 6px;
+    border-radius: 50px;
+    font-weight: bold;
+}
+.track-title {
+    margin-top: 0.5rem;
+    font-size: 1.1rem;
+}
+.track-artist {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+.track-lyricist {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+.progress-area {
+    margin-top: 1rem;
+}
+.time-stamps {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+}
+.progress-bar {
+    height: 6px;
+    background: var(--card-border-color);
+    border-radius: 50px;
+    position: relative;
+}
+.progress-current {
+    height: 100%;
+    background: #6366f1;
+    border-radius: 50px;
+    position: relative;
+}
+.progress-handle {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(50%, -50%);
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.player-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+.ctrl-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1rem;
+}
+.play-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #6366f1;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+}
+
+/* ==========================================================
+   跑马灯字幕栏优化样式 (style.css)
+   ========================================================== */
+.lyrics-marquee {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    font-size: 0.75rem;
+    color: #6366f1; /* 经典深紫蓝色 */
+    font-weight: 500;
+    overflow: hidden;
+    transition: all 0.5s ease;
+}
+
+/* 暗色模式下自适应发光 */
+.dark .lyrics-marquee {
+    color: #818cf8; /* 柔和浅紫蓝 */
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.04);
+}
+
+/* 左侧图标旋转 */
+.marquee-icon-left {
+    margin-right: 0.5rem;
+    font-size: 0.85rem;
+    animation: marquee-spin 6s linear infinite;
+    display: inline-block;
+    user-select: none;
+}
+
+/* 右侧音符上下跳动 */
+.marquee-icon-right {
+    margin-left: 0.5rem;
+    font-size: 0.95rem;
+    animation: marquee-bounce 0.8s ease-in-out infinite alternate;
+    display: inline-block;
+    user-select: none;
+}
+
+/* 滚动视口：两端边缘羽化淡入淡出 */
+.marquee-viewport {
+    flex-grow: 1;
+    overflow: hidden;
+    position: relative;
+    white-space: nowrap;
+    /* 🌟 核心：利用线性渐变透明度，实现划过两侧边缘时自然淡出的磨砂感 */
+    mask-image: linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%);
+}
+
+/* 滚动轨道：设置流畅的运动参数 */
+.marquee-track {
+    display: inline-block;
+    padding-left: 100%; /* 从视口最右侧以外滑入 */
+    /* ↙↙↙ 【在此处可以调整滚动速度，28s 代表走完一个周期的时间，数值越小滚动越快】 */
+    animation: marquee-scroll 28s linear infinite;
+}
+
+.marquee-track span {
+    padding-right: 3rem;
+    letter-spacing: 0.05em;
+}
+
+/* 🌟 鼠标悬停时自动暂停，方便用户阅读 */
+.lyrics-marquee:hover .marquee-track {
+    animation-play-state: paused;
+}
+
+/* ==========================================
+   跑马灯专属 Keyframes 动画帧
+   ========================================== */
+
+/* 无缝向左循环位移 */
+@keyframes marquee-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+
+/* 左侧图标优雅慢旋转 */
+@keyframes marquee-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* 右侧跳跃音符 */
+@keyframes marquee-bounce {
+    0% { transform: translateY(2px) scale(0.9); }
+    100% { transform: translateY(-4px) scale(1.1); }
+}
+
+/* 第二排布局 */
+.grid-row-bottom {
+    display: grid;
+    grid-template-columns: 4fr 8fr;
+    gap: 1.5rem;
+}
+
+/* 主容器 */
+.feature-card {
+    height: 400px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    border-radius: 1.25rem;
+}
+
+/* 渐变遮罩 */
+.feature-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* 幻灯片轨道 */
+.carousel-track {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* 幻灯片单页 */
+.carousel-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.75rem; /* 稍微拉开一点间距 */
+    box-sizing: border-box;
+}
+
+.carousel-slide.active {
+    opacity: 1;
+    visibility: visible;
+    z-index: 3;
+}
+
+/* 背景图层 */
+.carousel-slide .feature-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* 文本容器 */
+.carousel-slide .feature-content {
+    position: relative;
+    z-index: 4;
+    color: #ffffff !important;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    transform-origin: left bottom;
+}
+
+/* ==========================================
+   鼠标悬停时的独立缩放动效 (您可以微调以下数值)
+   ========================================== */
+/* 悬停景深动画 */
+.feature-card:hover .carousel-slide.active .feature-bg {
+    transform: scale(1.06); 
+}
+.feature-card:hover .carousel-slide.active .feature-content {
+    transform: scale(1.02) translateY(-4px); 
+}
+
+/* 头部徽章与日期栏 */
+.feature-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    margin-bottom: 1.25rem;
+}
+
+/* 左侧紫色“LATEST INSIGHT”半圆角徽章 */
+.feature-badge {
+    background: #5c62ec; /* 饱满的紫蓝色 */
+    color: #ffffff !important;
+    padding: 4px 12px;
+    border-radius: 50px; /* 胶囊圆角 */
+    font-weight: bold;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+/* 右侧日期胶囊边框 (高度还原截图) */
+.feature-date {
+    font-family: monospace;
+    font-size: 11px;
+    color: #ffffff !important;
+    background: rgba(0, 0, 0, 0.45); /* 深色半透明背景 */
+    border: 1px solid rgba(255, 255, 255, 0.15); /* 细边框 */
+    padding: 3px 12px;
+    border-radius: 50px; /* 胶囊圆角 */
+    letter-spacing: 0.05em;
+}
+
+/* 主标题文字：改为衬线宋体 (Songti) */
+.feature-title {
+    /* 英文采用 Georgia 衬线体，中文采用 宋体 / 华文宋体 */
+    font-family: Georgia, "Nimbus Roman No9 L", "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "SimSun", serif;
+    font-size: 1.75rem; /* 适当加大，高度还原视觉冲击力 */
+    font-weight: bold;
+    margin-bottom: 0.75rem;
+    color: #ffffff !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+    line-height: 1.25;
+}
+
+/* 描述文本 */
+.feature-desc {
+    font-family: system-ui, -apple-system, sans-serif; /* 描述依然使用清晰的无衬线体 */
+    font-size: 0.85rem;
+    color: #cbd5e1 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    opacity: 0.95;
+}
+
+/* ==========================================
+   轮播圆点：完美适配至右下角并微调圆角
+   ========================================== */
+.carousel-dots {
+    position: absolute;
+    bottom: 1.75rem;  /* 对齐 padding */
+    right: 1.75rem;  /* 移动至右下角 */
+    display: flex;
+    gap: 6px;        /* 紧凑的圆点间距 */
+    z-index: 10;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35); /* 未选中时的灰色半透明 */
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 选中态的胶囊扁平化拉伸 */
+.dot.active {
+    background: #818cf8; /* 浅紫蓝色 */
+    width: 20px;         /* 稍微缩短一点，比原先更精致 */
+    border-radius: 4px;
+}
+/* 右边子组合列 */
+.sub-column-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+/* ==========================================
+   首页宽幅摄影卡 (style.css) - 与左侧轮播动画对齐
+   ========================================== */
+
+/* 主容器 */
+.photography-card {
+    height: 180px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1.5rem;
+    overflow: hidden;
+    text-decoration: none; /* 移除下划线 */
+    border-radius: 1.25rem;
+}
+
+/* 独立的背景图层 */
+.photography-card .photography-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+    /* 与左侧轮播图相同的背景过渡时间与缓动曲线 */
+    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* 暗色渐变遮罩 (处于背景和文字之间) */
+.photography-card .card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.25) 100%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* 文字内容层 */
+.photography-card .photo-info {
+    position: relative;
+    z-index: 10; /* 强行置顶，确保文字不被暗化 */
+    /* 与左侧轮播图相同的文字过渡时间与缓动曲线 */
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    transform-origin: left bottom; /* 保持左下方对齐 */
+}
+
+/* ==========================================
+   【核心特效】：悬停时背景与文字分别触发缩放与位移
+   ========================================== */
+   
+/* 1. 背景图向内平滑放大 8% */
+.photography-card:hover .photography-bg {
+    transform: scale(1.08);
+}
+
+/* 2. 文字独立放大 3% 并向上漂移 4px */
+.photography-card:hover .photo-info {
+    transform: scale(1.03) translateY(-4px);
+}
+
+/* 文字排版样式（锁定高亮白色） */
+.photography-card .photo-title {
+    font-family: Georgia, "Nimbus Roman No9 L", "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "SimSun", serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    margin: 0;
+}
+
+.photography-card .photo-desc {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 0.875rem;
+    color: #cbd5e1 !important;
+    margin-top: 0.5rem;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+.card-overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--card-border-color);
+    opacity: 0.2;
+}
+.photo-info {
+    position: relative;
+    z-index: 2;
+}
+.photo-title {
+    font-size: 1.5rem;
+}
+.photo-desc {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+}
+
+/* 二级双列组合 */
+.split-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+    flex-grow: 1;
+}
+
+/* ==========================================
+   记录卡轮播样式定义 (style.css)
+   ========================================== */
+
+/* 记录卡主容器 */
+.records-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1.25rem;
+    height: 100%; /* 拉伸填满外部高度 */
+    min-height: 200px;
+    box-sizing: border-box;
+}
+
+/* 
+   利用伪元素在记录卡背景图之上、内容之下生成压暗渐变遮罩 
+   锁定最高对比度，防止文字看不清
+*/
+.records-card .carousel-slide .feature-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.35) 60%, transparent 100%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* 
+   【视差悬停动效】：
+   当鼠标移入特色文章卡（feature-card）或记录卡（records-card）时，
+   对应的背景和文字执行独立的平滑缩放与移位
+*/
+.feature-card:hover .carousel-slide.active .feature-bg,
+.records-card:hover .carousel-slide.active .feature-bg {
+    transform: scale(1.06); /* 背景向内放大 6% */
+}
+
+.feature-card:hover .carousel-slide.active .feature-content,
+.records-card:hover .carousel-slide.active .feature-content {
+    transform: scale(1.02) translateY(-4px); /* 文字上移 4px 并整体放大 2% */
+}
+
+/* 记录卡内部特定元素样式细调 */
+.records-card .record-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    margin-bottom: 0.75rem;
+}
+
+.records-card .record-badge {
+    background: rgba(99, 102, 241, 0.2) !important;
+    border: 1px solid rgba(129, 140, 248, 0.4) !important;
+    color: #818cf8 !important; /* 精致淡紫色 */
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+}
+
+.records-card .record-date {
+    color: #cbd5e1 !important;
+    font-family: monospace;
+    font-size: 11px;
+}
+
+.records-card .record-title {
+    font-size: 1.15rem;
+    font-weight: bold;
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    margin-bottom: 0.5rem;
+    line-height: 1.35;
+}
+
+.records-card .record-desc {
+    font-size: 0.75rem;
+    color: #cbd5e1 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    line-height: 1.45;
+    max-width: 90%;
+}
+.record-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+}
+.record-badge {
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #6366f1;
+}
+.record-title {
+    font-size: 1.1rem;
+    margin-top: 0.75rem;
+}
+.record-desc {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+    line-height: 1.5;
+}
+.record-indicators {
+    display: flex;
+    gap: 6px;
+    margin-top: 1rem;
+}
+.ind-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--card-border-color);
+}
+.ind-dot.active {
+    background: #6366f1;
+}
+
+/* 主题切换按钮卡 */
+.theme-toggle-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    padding: 1.5rem;
+}
+.theme-toggle-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 20px -5px var(--glow-shadow);
+}
+.theme-toggle-card:active {
+    transform: scale(0.96);
+}
+.theme-icon-box {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: var(--button-theme-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 12px var(--glow-shadow);
+    animation: pulse 3s infinite;
+}
+.theme-label-title {
+    font-weight: bold;
+    font-size: 1rem;
+}
+.theme-label-desc {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+/* 页脚样式 */
+.app-footer {
+    background: var(--card-background);
+    border: 1px solid var(--card-border-color);
+    border-radius: 1.25rem;
+    padding: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+.footer-status {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.digital-clock {
+    font-family: monospace;
+    background: var(--clock-bg);
+    color: #22d3ee;
+    border: 1px solid rgba(34, 211, 238, 0.2);
+    padding: 0.35rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: bold;
+}
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.status-dot {
+    width: 10px;
+    height: 10px;
+    background: #10b981;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+.highlight-text {
+    color: var(--text-primary);
+}
+.footer-tags {
+    display: flex;
+    gap: 0.5rem;
+}
+.tech-tag {
+    background: var(--clock-bg);
+    border: 1px solid var(--card-border-color);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+/* 浮动小猫及挂件 */
+.floating-container {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1rem;
+    z-index: 100;
+}
+.pixel-cat-widget {
+    cursor: pointer;
+}
+.cat-body {
+    width: 48px;
+    height: 48px;
+    background: #f1f5f9;
+    border-radius: 8px;
+    border: 2px solid #1e293b;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 4px;
+}
+.dark .cat-body {
+    background: #e2e8f0;
+}
+.cat-ear {
+    position: absolute;
+    top: -8px;
+    width: 12px;
+    height: 12px;
+    background: inherit;
+    border-top: 2px solid #1e293b;
+}
+.ear-left { left: 4px; border-left: 2px solid #1e293b; transform: rotate(45deg); }
+.ear-right { right: 4px; border-right: 2px solid #1e293b; transform: rotate(-45deg); }
+.cat-eyes {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 4px;
+    margin-bottom: 8px;
+}
+.cat-eye {
+    width: 6px;
+    height: 6px;
+    background: #1e293b;
+    border-radius: 50%;
+}
+.cat-tail {
+    position: absolute;
+    right: -4px;
+    bottom: 4px;
+    width: 8px;
+    height: 24px;
+    background: #1e293b;
+    border-radius: 50px;
+    transform: rotate(15deg);
+}
+.floating-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.float-btn {
+    width: 40px;
+    height: 40px;
+    background: #4f46e5;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.settings-widget {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    z-index: 100;
+}
+.settings-btn {
+    width: 40px;
+    height: 40px;
+    background: var(--card-background);
+    border: 1px solid var(--card-border-color);
+    color: var(--text-primary);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* 动效 */
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+/* 响应式断点 */
+@media (max-width: 1024px) {
+    .grid-row-top { grid-template-columns: 1fr; }
+    .grid-row-bottom { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+    .app-header { flex-direction: column; gap: 1rem; }
+    .split-row { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================
+   全屏粒子画布与弹幕样式 (style.css)
+   ========================================================== */
+
+/* 全屏固定背景 Canvas 粒子 */
+#bg-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* 统一的外层全屏轮播背景容器 (层级 z-index: -10) */
+.global-bg-container {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -10;
+    overflow: hidden;
+}
+
+.global-bg-slide {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transition: opacity 2s ease;
+    opacity: 0;
+}
+
+#global-slide-1 {
+    opacity: 1;
+}
+
+/* 日间/夜间背景自适应防过亮罩层 */
+.global-bg-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45); /* 默认夜间偏暗 */
+    transition: background-color 0.5s ease;
+    z-index: 1;
+}
+
+html:not(.dark) .global-bg-overlay {
+    background: rgba(255, 255, 255, 0.15); /* 日间模式过亮保护 */
+}
+
+/* -----------------------------------------
+   【核心修改】：常态全屏毛玻璃罩层 (z-index: -5)
+   压在背景和弹幕之上，在主网页内容下方，渲染常态磨砂
+   ----------------------------------------- */
+.global-glass-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -5;
+    pointer-events: none;
+    backdrop-filter: blur(14px); /* 🌟 添加常态全屏毛玻璃效果 */
+    -webkit-backdrop-filter: blur(14px);
+    background: rgba(15, 23, 42, 0.4); /* 压暗色彩 */
+    transition: background-color 0.5s ease;
+}
+
+html:not(.dark) .global-glass-overlay {
+    background: rgba(255, 255, 255, 0.18); /* 日间磨砂亮色罩层 */
+}
+
+/* =========================================================================
+   全局背景弹幕层容器 (style.css) - 已提升至全屏毛玻璃之上
+   ========================================================================= */
+.global-danmaku-container {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -3; /* 🌟 核心修改：提升至 -3，使其处于全屏毛玻璃（-5）上方，字迹完全锐利清晰 */
+    pointer-events: none;
+    overflow: hidden;
+}
+
+/* 弹幕单条文本样式 (现在处于毛玻璃上方，呈现高清晰、高对比度的高级磨砂悬浮感) */
+.danmaku-item {
+    position: absolute;
+    left: 0;
+    white-space: nowrap;
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "SimHei", sans-serif;
+    font-size: 1.6rem; 
+    font-weight: 700;  
+    color: rgba(255, 255, 255, 0.45); /* 稍微提升了不透明度，使不模糊的白字更清晰 */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* 配合清晰字体，增加了微弱阴影以强化字形 */
+    will-change: transform;
+    pointer-events: none;
+    letter-spacing: 0.05em;
+    transition: color 0.5s ease;
+}
+
+/* 用户自己发送的弹幕高亮样式（微弱带边框） */
+.danmaku-item.high-priority {
+    color: rgba(167, 243, 208, 0.7) !important;
+    font-weight: bold;
+    border: 1px solid rgba(52, 211, 153, 0.25);
+    background: rgba(16, 185, 129, 0.15);
+    padding: 2px 12px;
+    border-radius: 50px;
+}
+
+/* 日间模式下自适应变暗 */
+html:not(.dark) .danmaku-item {
+    color: rgba(15, 23, 42, 0.4); /* 自适应为中等深灰色 */
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+html:not(.dark) .danmaku-item.high-priority {
+    color: rgba(4, 120, 87, 0.7) !important;
+    border: 1px solid rgba(4, 120, 87, 0.25);
+    background: rgba(52, 211, 153, 0.2);
+}
+
+/* -----------------------------------------
+   主体卡片毛玻璃重度磨砂
+   ----------------------------------------- */
+.card {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(25px) saturate(120%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(120%) !important;
+}
+
+.dark .card {
+    background: rgba(15, 23, 42, 0.45) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* -----------------------------------------
+   毛玻璃弹幕发送模态框
+   ----------------------------------------- */
+.danmaku-modal-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.danmaku-modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.danmaku-modal-card {
+    width: 90%;
+    max-width: 420px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 1.25rem;
+    padding: 1.75rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    transform: translateY(20px) scale(0.95);
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.dark .danmaku-modal-card {
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.danmaku-modal-overlay.active .danmaku-modal-card {
+    transform: translateY(0) scale(1);
+}
+
+.danmaku-modal-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+#danmaku-modal-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.75rem;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.3s;
+}
+
+.dark #danmaku-modal-input {
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+#danmaku-modal-input:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
+}
+
+.danmaku-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.danmaku-modal-btn {
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+
+.btn-cancel {
+    background: transparent;
+    color: var(--text-secondary);
+}
+.btn-cancel:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+.dark .btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-submit {
+    background: #6366f1;
+    color: #ffffff;
+}
+.btn-submit:hover {
+    background: #4f46e5;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+/* ==========================================================
+   全局鼠标点击双层同心圆涟漪动效 (style.css)
+   ========================================================== */
+
+/* 外层扩散光环 */
+.click-ripple {
+    position: fixed;
+    border-radius: 50%;
+    /* 采用与全局主题呼应的薰衣草紫蓝色 */
+    border: 2px solid rgba(129, 140, 248, 0.6);
+    box-shadow: 0 0 10px rgba(129, 140, 248, 0.2);
+    pointer-events: none; /* 必须：穿透鼠标事件，不阻挡下方任何点击 */
+    z-index: 10000;       /* 置于最顶层 */
+    transform: translate(-50%, -50%);
+    /* 使用减速曲线：开始极快，随后优雅地慢速收尾，高度符合水滴物理特性 */
+    animation: ripple-outer-glow 0.8s cubic-bezier(0.1, 0.8, 0.25, 1) forwards;
+}
+
+/* 内层饱满核心 (利用伪元素实现双同心圆效果 - 还原图 25) */
+.click-ripple::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: rgba(129, 140, 248, 0.45);
+    animation: ripple-inner-core 0.8s cubic-bezier(0.1, 0.8, 0.25, 1) forwards;
+}
+
+/* 外环扩散动画 */
+@keyframes ripple-outer-glow {
+    0% {
+        width: 0px;
+        height: 0px;
+        opacity: 1;
+    }
+    100% {
+        width: 140px; /* 外圈最大扩散至 140px */
+        height: 140px;
+        opacity: 0;
+        border-width: 1px;
+    }
+}
+
+/* 内核扩散动画 (保持相对较小，符合水流透镜折射) */
+@keyframes ripple-inner-core {
+    0% {
+        width: 0px;
+        height: 0px;
+        opacity: 1;
+    }
+    100% {
+        width: 45px;  /* 内核最大扩散至 45px，体现图 25/26 景深差 */
+        height: 45px;
+        opacity: 0;
+    }
+}

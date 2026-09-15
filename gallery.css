@@ -1,0 +1,408 @@
+/* ==========================================================
+   画廊专属样式表 (gallery.css) - 宽高适配与错落布局优化
+   ========================================================== */
+
+.gallery-container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    position: relative;
+    z-index: 10;
+}
+
+/* 顶部标题区 */
+.gallery-title-section {
+    text-align: center;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+}
+
+.gallery-main-title {
+    font-family: Georgia, "STSong", "SimSun", serif;
+    font-size: 2.5rem;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+}
+
+.gallery-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* 搜索框区 */
+.gallery-search {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 4rem;
+}
+
+/* -----------------------------------------
+   相册堆叠卡牌大网格 - 错落排版实现 (高度还原截图)
+   ----------------------------------------- */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 4rem 2rem;
+    justify-items: center;
+    margin-bottom: 5rem;
+}
+
+/* 仅在桌面大屏状态下，应用截图中的错落起伏和间距定位 */
+@media (min-width: 1024px) {
+    .gallery-grid {
+        grid-template-columns: repeat(3, 1fr);
+        align-items: start;
+        gap: 3rem 2rem;
+    }
+    /* 第一列第二个 (唐宋历史巡游) 会自动排在第一列下方，向下稍微让出间距 */
+    .gallery-grid > :nth-child(4) {
+        margin-top: 5rem;
+    }
+    /* 第二列 (板栗猫猫) 整体向下偏移沉底 */
+    .gallery-grid > :nth-child(2) {
+        margin-top: 5.5rem;
+    }
+    /* 第三列 (泰拉大陆纪行) 稍微偏下 */
+    .gallery-grid > :nth-child(3) {
+        margin-top: 1.5rem;
+    }
+}
+
+/* 堆叠整体容器 */
+.album-deck-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.cards-stack-container {
+    position: relative;
+    margin-bottom: 1.25rem;
+}
+
+/* 纸张卡片基准类 */
+.photo-stack-card {
+    position: absolute;
+    border: 4px solid #ffffff;
+    background-color: #121824;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+    background-size: cover;
+    background-position: center;
+    box-sizing: border-box;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s, filter 0.5s;
+}
+
+/* -----------------------------------------
+   【横屏相册布局适配】 (二六年南昌 / 唐宋巡游)
+   ----------------------------------------- */
+.aspect-landscape .cards-stack-container {
+    width: 300px;
+    height: 200px;
+}
+
+.aspect-landscape .photo-stack-card {
+    width: 290px;
+    height: 190px;
+}
+
+/* 横屏默认错位倾斜角度 */
+.aspect-landscape .card-back {
+    z-index: 1;
+    transform: rotate(-5deg) translate(-10px, -5px);
+    opacity: 0.4;
+    filter: blur(1.5px);
+}
+
+.aspect-landscape .card-middle {
+    z-index: 2;
+    transform: rotate(3deg) translate(8px, 4px);
+    opacity: 0.75;
+    filter: blur(0.5px);
+}
+
+.aspect-landscape .card-front {
+    z-index: 3;
+    transform: rotate(0deg);
+    opacity: 1;
+}
+
+/* 横屏悬停散开物理动画 (还原图3) */
+.aspect-landscape:hover .card-back {
+    transform: rotate(-10deg) translate(-22px, -15px);
+    opacity: 0.8;
+    filter: blur(0px);
+}
+
+.aspect-landscape:hover .card-middle {
+    transform: rotate(7deg) translate(18px, 8px);
+    opacity: 0.95;
+    filter: blur(0px);
+}
+
+.aspect-landscape:hover .card-front {
+    transform: scale(1.02);
+}
+
+
+/* -----------------------------------------
+   【竖屏相册布局适配】 (板栗猫猫 / 泰拉纪行)
+   ----------------------------------------- */
+.aspect-portrait .cards-stack-container {
+    width: 200px;
+    height: 300px; /* 竖版黄金宽高比 */
+}
+
+.aspect-portrait .photo-stack-card {
+    width: 190px;
+    height: 290px;
+}
+
+/* 竖屏默认错开状态 */
+.aspect-portrait .card-back {
+    z-index: 1;
+    transform: rotate(-4deg) translate(-6px, -10px);
+    opacity: 0.4;
+    filter: blur(1.5px);
+}
+
+.aspect-portrait .card-middle {
+    z-index: 2;
+    transform: rotate(2.5deg) translate(6px, 8px);
+    opacity: 0.75;
+    filter: blur(0.5px);
+}
+
+.aspect-portrait .card-front {
+    z-index: 3;
+    transform: rotate(0deg);
+    opacity: 1;
+}
+
+/* 竖屏悬停展开物理动画（确保身后层级跟随竖向变宽散开） */
+.aspect-portrait:hover .card-back {
+    transform: rotate(-8deg) translate(-14px, -24px);
+    opacity: 0.8;
+    filter: blur(0px);
+}
+
+.aspect-portrait:hover .card-middle {
+    transform: rotate(5deg) translate(14px, 18px);
+    opacity: 0.95;
+    filter: blur(0px);
+}
+
+.aspect-portrait:hover .card-front {
+    transform: scale(1.02);
+}
+
+
+/* -----------------------------------------
+   悬停遮罩层与文字样式
+   ----------------------------------------- */
+.front-hover-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    color: #ffffff;
+    transition: all 0.4s ease;
+    border-radius: 4px;
+    z-index: 5;
+}
+
+/* 悬浮浮现黑底和 Click 文字 (图3 效果) */
+.album-deck-wrapper:hover .front-hover-overlay {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    opacity: 1;
+}
+
+.hover-photos-count {
+    font-family: Georgia, "STSong", serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+}
+
+.hover-click-text {
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    color: #cbd5e1;
+}
+
+/* 基础文字样式保持优雅 */
+.album-meta-text {
+    text-align: center;
+    width: 100%;
+}
+
+.album-title-line {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.album-title {
+    font-family: Georgia, "STSong", "SimSun", serif;
+    font-size: 1.15rem;
+    font-weight: bold;
+    color: #6366f1;
+}
+
+.dark .album-title {
+    color: #818cf8;
+}
+
+.album-date-badge {
+    font-family: monospace;
+    font-size: 10px;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 2px 8px;
+    border-radius: 50px;
+    color: var(--text-secondary);
+}
+
+.album-desc {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.35rem;
+}
+
+/* -----------------------------------------
+   相册内部详情页样式 (保持原状)
+   ----------------------------------------- */
+.album-detail-view {
+    display: none;
+    animation: galleryFadeIn 0.5s ease both;
+}
+
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1px solid var(--card-border-color);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.back-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s;
+}
+
+.back-btn:hover {
+    color: var(--text-primary);
+}
+
+.detail-title-block {
+    margin-top: 1rem;
+}
+
+.detail-main-title {
+    font-family: Georgia, "STSong", serif;
+    font-size: 2.25rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.detail-desc {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.detail-count-badge {
+    border: 1px solid var(--card-border-color);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+/* 照片墙详情布局 */
+.photos-masonry {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-bottom: 5rem;
+}
+
+.detail-photo-card {
+    position: relative;
+    width: 270px;
+    height: 380px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--card-border-color);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    background: #111827;
+    cursor: pointer;
+}
+
+.detail-photo-img {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.detail-photo-card:hover .detail-photo-img {
+    transform: scale(1.06);
+}
+
+.detail-photo-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+    display: flex;
+    align-items: flex-end;
+    padding: 1.5rem 1.25rem;
+    box-sizing: border-box;
+    transform: translateY(15px);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
+    z-index: 5;
+}
+
+.detail-photo-card:hover .detail-photo-caption {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.detail-photo-title {
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes galleryFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
